@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h3 class="text-center mt-5 mb-5">Ваш заказ</h3>
+    {% for i in cart.cartprod.all %}  
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Наименование товара</th>
+                <th scope="col">Изображение</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Количество</th>
+                <th scope="col">Общая цена</th>
+              
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>{{i.content_object.name}}</td>
+                <td class="w-25" ><img class="card-img-top" src="{{i.content_object.photo.url}}" class="img-fluid"></td>
+                <td>{{i.content_object.price}}</td>
+                <td>{{i.quality}}</td>
+              
+                <td>{{i.finalprice}}</td>
+            </tr>
+             {% endfor %}
+            <tr>
+                <td colspan="3"></th>
+                <td>Итого</th>
+                <td><strong>{{cart.total_prod}}</strong></td>
+                <td><strong>{{cart.finalprice}}</strong></td>
+            </tr>
+
+
+            </tbody>
+        </table>
+        <div style="margin-bottom: 50px;">
+            <h3 class="text-center mt-5 mb-5">Оформить</h3>
+            <form action="{% url 'delivery' %}" method="POST">  
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" class="btn btn-success btn-block mb-3" value="Отправить" style="display: block; margin-top: 30px;">
+            </form>
+            
+        </div>
+        
+
+{% endblock %}

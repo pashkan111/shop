@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h3 class="text-center mt-5 mb-5">Ваша корзина {% if not cart.cartprod.count %} пуста {% endif %}</h3>
+    {% for i in cart.cartprod.all %}  
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Наименование товара</th>
+                <th scope="col">Изображение</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Количество</th>
+                <th scope="col">Общая цена</th>
+              
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>{{i.content_object.name}}</td>
+                <td class="w-25" ><img class="card-img-top" src="{{i.content_object.photo.url}}" class="img-fluid"></td>
+                <td>{{i.content_object.price}}</td>
+                <td>
+                    <form action="{% url 'change_quality' ct_model=i.get_ct_model slug=i.content_object.slug %}" method="POST">
+                        {% csrf_token %}
+                        <input type="number" class="form-control" name="quality" style="width: 100px;" min="1" value="{{i.quality}}">
+                        <br>
+                        <input type="submit" class="btn btn-primary" value="Изменить">
+                    </form>
+                </td>
+              
+                <td>{{i.finalprice}}</td>
+                <td><a href="{% url 'del_product_from_cart' ct_model=i.get_ct_model slug=i.content_object.slug %}"><button class="btn btn-danger">Убрать из корзины</button></a></td>
+            </tr>
+
+             {% endfor %}
+
+             {% if cart.cartprod.count %}
+            <tr>
+                <td colspan="3"></th>
+                <td>Итого</th>
+                <td><strong>{{cart.total_prod}}</strong></td>
+                <td><strong>{{cart.finalprice}}</strong></td>
+                <td><a href="{% url 'zakaz' %}"><button class="btn btn-danger">Создать заказ</button></a></td>
+
+            </tr>
+            {% endif %}
+
+            </tbody>
+        </table>
+
+       
+
+{% endblock %}
