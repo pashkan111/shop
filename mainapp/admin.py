@@ -26,23 +26,17 @@ from PIL import Image
         
 
 
-class NotebookAdmin(admin.ModelAdmin):
-    # form = NotebookForm
-    prepopulated_fields = {'slug': ('name', )}
-    list_display = ('name', 'diagonal', 'processor')
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name', )}
 
-class SmartphoneAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name', )}
+
 
 admin.site.register(Cartproduct)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Cart)
-admin.site.register(Notebook, NotebookAdmin)
-admin.site.register(Smartphone, SmartphoneAdmin)
 admin.site.register(Customer)
 admin.site.register(Order)
+admin.site.register(Product)
 
 

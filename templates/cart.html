@@ -19,11 +19,11 @@
             <tbody>
             <tr>
                 <th scope="row">1</th>
-                <td>{{i.content_object.name}}</td>
-                <td class="w-25" ><img class="card-img-top" src="{{i.content_object.photo.url}}" class="img-fluid"></td>
-                <td>{{i.content_object.price}}</td>
+                <td>{{i.product.name}}</td>
+                <td class="w-25" ><img class="card-img-top" src="{{i.product.photo.url}}" class="img-fluid"></td>
+                <td>{{i.product.price}}</td>
                 <td>
-                    <form action="{% url 'change_quality' ct_model=i.get_ct_model slug=i.content_object.slug %}" method="POST">
+                    <form action="{% url 'change_quality' slug=i.product.slug %}" method="POST">
                         {% csrf_token %}
                         <input type="number" class="form-control" name="quality" style="width: 100px;" min="1" value="{{i.quality}}">
                         <br>
@@ -32,7 +32,7 @@
                 </td>
               
                 <td>{{i.finalprice}}</td>
-                <td><a href="{% url 'del_product_from_cart' ct_model=i.get_ct_model slug=i.content_object.slug %}"><button class="btn btn-danger">Убрать из корзины</button></a></td>
+                <td><a href="{% url 'del_product_from_cart'  slug=i.product.slug %}"><button class="btn btn-danger">Убрать из корзины</button></a></td>
             </tr>
 
              {% endfor %}
@@ -40,7 +40,7 @@
              {% if cart.cartprod.count %}
             <tr>
                 <td colspan="3"></th>
-                <td>Итого</th>
+                <td>Итого</td>
                 <td><strong>{{cart.total_prod}}</strong></td>
                 <td><strong>{{cart.finalprice}}</strong></td>
                 <td><a href="{% url 'zakaz' %}"><button class="btn btn-danger">Создать заказ</button></a></td>

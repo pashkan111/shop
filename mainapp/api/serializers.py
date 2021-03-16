@@ -1,6 +1,6 @@
 from django.contrib.contenttypes import fields
 from rest_framework import serializers
-from ..models import Category, Notebook, Smartphone
+from ..models import Category
 
 
 class CategorySerial(serializers.ModelSerializer):
@@ -22,21 +22,3 @@ class BaseProductSerial:
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects)
 
 
-class NotebookSerial(BaseProductSerial, serializers.ModelSerializer):
-    diagonal = serializers.DecimalField(required=True, max_digits = 9, decimal_places = 1)
-    processor = serializers.CharField(required=True)
-    ram = serializers.DecimalField(required=True, max_digits = 3, decimal_places = 0)
-
-    class Meta:
-        model = Notebook
-        fields = '__all__'
-
-
-class SmartphoneSerial(BaseProductSerial, serializers.ModelSerializer):
-    diagonal = serializers.DecimalField(required=True, decimal_places=1, max_digits=10)
-    color = serializers.CharField(required=True)
-    camera = serializers.DecimalField(required=True, decimal_places=1, max_digits=10)
-
-    class Meta:
-        model = Smartphone
-        fields = '__all__'

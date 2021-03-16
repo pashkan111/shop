@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load tags %}
+
 {% block detail %}
 
 
@@ -14,7 +14,7 @@
             <p class=""><h2>{{detail.name}}</h2></p>
             <p class="price"><h2>{{detail.price}} P</h2></p> 
             <p class="category"><a href="">{{detail.category}}</a></p> 
-            <a href="{% url 'add_prod_to_cart' ct_model=ct_model slug=detail.slug %}"><button class="btn btn-danger">Добавить в корзину</button></a>
+            <a href="{% url 'add_prod_to_cart'  slug=object.slug %}"><button class="btn btn-danger">Добавить в корзину</button></a>
         </div>
     <div>
         <h3>Описание</h3>
@@ -23,12 +23,5 @@
 </div>
  
 <div>
-    {{detail| product_spec}}
     <h3>Характеристики</h3>
-{% if product.category.slug == 'notebook' %}
-    {% include 'note_spec.html' %}
-{% else %}
-
-    {% include 'sm_spec.html' %}
-{% endif %}
 {% endblock %}

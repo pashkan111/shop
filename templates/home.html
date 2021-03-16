@@ -44,7 +44,7 @@
               <a href="{{i.get_absolute_url}}"><img class="card-img-top" src="{{i.photo.url}}" class="img-fluid"></a>
               <div class="card-body">
                 <h4 class="card-title">
-                  <a href="{{i.get_absolute_url}}">{{i.name}}</a>
+                  <a href="{% url 'detail' slug=i.slug %}">{{i.name}}</a>
                 </h4>
                 <h5>{{i.price}}руб</h5>
               </div>
