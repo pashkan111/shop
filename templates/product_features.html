@@ -14,14 +14,17 @@
     <div class="row">
         <div class="col-md-4">
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item actiom">Создать новую категорию</a>
-                <a href="#" class="list-group-item list-group-item actiom">Создать новую характеристику</a>
-                <a href="#" class="list-group-item list-group-item actiom">Создать значение характеристики</a>
-                <a href="#" class="list-group-item list-group-item actiom">Создать характеристику для товара</a>
-                <a href="#" class="list-group-item list-group-item actiom">Редактировать характеристику</a>
+                <a href="{% url 'add_category' %}" class="list-group-item list-group-item action {% if request.path == '/admin_features/add_category/' %}active{% endif %}" >Создать новую категорию</a>
+                <a href="{% url 'add_feature' %}" class="list-group-item list-group-item action {% if request.path == '/admin_features/add_feature/' %}active{% endif %}">Создать новую характеристику</a>
+                <a href="{% url 'product_value' %}" class="list-group-item list-group-item action {% if request.path == '/admin_features/product_value/' %}active{% endif %}">Создать значение характеристики</a>
+                <a href="#" class="list-group-item list-group-item actio">Создать характеристику для товара</a>
+                <a href="#" class="list-group-item list-group-item action">Редактировать характеристику</a>
             </div>
         </div>
-        <div class="col-md-8"></div>
+        <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
+        </div>
     </div>
 
 </div>

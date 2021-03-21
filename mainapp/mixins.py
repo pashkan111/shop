@@ -1,6 +1,10 @@
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
-from .models import Cart, Category, Customer, Cartproduct
+from django.views.generic.list import ListView
+from .models import Cart, Category, Comment, Customer, Cartproduct
+from django.shortcuts import redirect, render
+from .forms import ZakazForm, LoginForm, RegistrationForm, CommentForm
+
 
 class CategoryDetailMixin(SingleObjectMixin):
 
@@ -31,3 +35,5 @@ class CartMixin(View):
     def get_count(self, *args):
         cartprod_count = Cartproduct.objects.all().count()
         return cartprod_count
+
+

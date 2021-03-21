@@ -1,7 +1,7 @@
 
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from .views import ShowDetail, CategoryDetail,  HomePage, CartPage, AddProdToCart, del_from_cart, ChangeQUALITY, Zakaz, GetForm, LoginView, Register, Profile
+from .views import ShowDetail, CategoryDetail,  HomePage, CartPage, AddProdToCart, del_from_cart, ChangeQUALITY, Zakaz, GetForm, LoginView, Register, Profile, share_prod
 
 
 urlpatterns = [
@@ -20,4 +20,6 @@ urlpatterns = [
     path('register/', Register.as_view(), name = 'register'),
     path('logout/', LogoutView.as_view(next_page='/home/'), name = 'logout'),
     path('profile/', Profile.as_view(), name = 'profile'),
+    path('share/<int:id>', share_prod, name = 'share'),
+    
 ]

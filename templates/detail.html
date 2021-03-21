@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
+{% load tags %}
 {% block detail %}
-
+{% load crispy_forms_tags %}
 
 <div style="display: block; margin-top: 20px;">
     <div class="row">
@@ -13,15 +13,29 @@
         <div class="col-md-8">
             <p class=""><h2>{{detail.name}}</h2></p>
             <p class="price"><h2>{{detail.price}} P</h2></p> 
-            <p class="category"><a href="">{{detail.category}}</a></p> 
-            <a href="{% url 'add_prod_to_cart'  slug=object.slug %}"><button class="btn btn-danger">Добавить в корзину</button></a>
+            <p class="category">Категория: <a href="{% url 'category_detail' slug=detail.category.slug %}" style="text-decoration: none;">{{detail.category}}</a></p> 
+            <p style="display: block;"><a href="{% url 'add_prod_to_cart'  slug=object.slug %}"><button class="btn btn-danger">Добавить в корзину</button></a></p>
+            <p style="display: inline-block"><a href="{% url 'share'  id=object.id %}"><button class="btn btn-primary">Поделиться</button></a></p>
         </div>
     <div>
         <h3>Описание</h3>
         {{detail.description}}
     </div>
 </div>
- 
-<div>
+{{comment|to_print}}
+
+<div class="col-md-12">
+    <form>
+        {{csrf_token}}
+        {{comment_form|crispy}}
+
+    <input type="submit" class="btn btn-primary" value="Отправить">
+    </form>
+
+</div>
+
+
     <h3>Характеристики</h3>
 {% endblock %}
+
+

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<h3>Форма отправки</h3>
+<form action="" method="POST">
+{% csrf_token %}
+{{ form| crispy }}
+<hr>
+<input type="submit" class="btn btn-success" value="Отправить">
+</form>
+
+{% endblock %}

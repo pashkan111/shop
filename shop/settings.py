@@ -120,5 +120,12 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'mainapp/static'),]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = 'media/'
 
-
+INTERNAL_IPS = ['127.0.0.1']
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'kozhevnikov0001@yandex.ru'
+EMAIL_HOST_PASSWORD = 'gkmdvmep'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True

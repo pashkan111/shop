@@ -3,7 +3,7 @@ from django.db import models
 
 class CategoryFeatures(models.Model):
     category = models.ForeignKey(
-        'mainapp.Category', verbose_name='Категория', on_delete=models.CASCADE
+        "mainapp.Category", verbose_name='Категория', on_delete=models.CASCADE
         )
     feature_name = models.CharField(max_length=100, verbose_name='Имя характеристики')
     feature_filter_name = models.CharField(max_length=100, verbose_name='Имя фильтра')
@@ -17,7 +17,7 @@ class CategoryFeatures(models.Model):
 
 class FeaturesValid(models.Model):
     category = models.ForeignKey(
-        'mainapp.Category', verbose_name='Категория', on_delete=models.CASCADE
+        "mainapp.Category", verbose_name='Категория', on_delete=models.CASCADE
         )
     feature_key = models.ForeignKey(
         CategoryFeatures, on_delete=models.CASCADE, verbose_name='Ключ характеристики'

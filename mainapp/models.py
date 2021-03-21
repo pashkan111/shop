@@ -4,8 +4,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models.aggregates import Count
 from django.db.transaction import commit
 import datetime
-
 from django.contrib.contenttypes.fields import GenericForeignKey
+
+from django.contrib.contenttypes.fields import GenericRelation
 
 from django.urls import reverse
 User = get_user_model()
@@ -19,7 +20,7 @@ class Product(models.Model):
     description = models.TextField(verbose_name='описание')
     photo = models.ImageField(upload_to = 'products')
     category = models.ForeignKey('Category', verbose_name='категория', on_delete=models.CASCADE)
-
+    comment = GenericRelation('comment')
 
     def __str__(self):
         return self.name
@@ -27,8 +28,28 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('detail', kwargs={'slug': self.slug})
 
+class Comment(models.Model):
+    user = models.ForeignKey('Customer', on_delete=models.CASCADE, verbose_name='Пользователь')
+    text = models.TextField(verbose_name='Текст')
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True, 
+        verbose_name='Родитель',
+        on_delete=models.CASCADE,
+        related_name='comment_child'
+    )
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
+    time_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время добавления')
+    is_child = models.BooleanField(default=False)
 
-
+    @property
+    def define_parent(self):
+        if not self.parent:
+            return ''
+        return self.parent
 
 class Category(models.Model):
     name = models.CharField(verbose_name='категория', max_length=200)
@@ -115,6 +136,7 @@ class Order(models.Model):
         default=STATUS_NEW
 
     )
+    comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
 
     delivery = models.CharField(
         max_length=100,
@@ -122,8 +144,6 @@ class Order(models.Model):
         choices = TYPE_CHOISES,
         default = BY_YOURSELF
     )
-    comment = models.TextField(max_length=500, verbose_name='Комментарий к заказу', blank=True, null=True)
-
     def __str__(self):
         return 'Order № {}'.format(self.id)
 

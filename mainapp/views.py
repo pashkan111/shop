@@ -2,6 +2,7 @@ from django import forms
 from django.db.models import base
 from django.db.models.aggregates import Count
 from django.db.models.query import QuerySet
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import authenticate, login
@@ -10,9 +11,9 @@ from .models import *
 from .mixins import *
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from .forms import ZakazForm, LoginForm, RegistrationForm
-from .utils import save_cart
-
+from .forms import ZakazForm, LoginForm, RegistrationForm, CommentForm, DispatchForm
+from .utils import *
+from django.core.mail import send_mail 
 
 
 class HomePage(CartMixin, ListView):
@@ -137,17 +138,61 @@ class ShowDetail(CartMixin, CategoryDetailMixin, DetailView):
     template_name = 'detail.html'
     context_object_name = 'detail'
     model = Product
-
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['count'] = self.get_count()
+        comment = Product.objects.first().comment.all()
+        result = create_comment(comment)
+        context['comment'] = result
+        context['res'] = result
         return context
+    
+    def post(self, request, *args, **kwargs):
+        comment_form = CommentForm(request.POST or None)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.user = request.user
+            new_comment.text = comment_form.cleaned_data['text']
+            new_comment.content_type = ContentType.objects.get(model='product')
+            new_comment.object_id = 1
+            new_comment.parent = None
+            new_comment.is_child = False
+            new_comment.save()
+            return HttpResponseRedirect('')
+        return super().dispatch(request, *args, **kwargs)
+    # def get_queryset(self):
+    #     comment = Product.objects.first().comment.all()
+    #     result = create_comment(comment)
+    #     print(result)
+
+    # def get(self, request, *args, **kwargs):
+    #     comment_form = CommentForm(request.POST or None)
+    #     context = {
+    #         'comment_form': comment_form
+    #     }
+    #     return render(request, 'detail.html', context=context)
+
+
+def get_comment(request):
+    comment_form = CommentForm(request.POST or None)
+    if comment_form.is_valid():
+        new_comment = comment_form.save(commit=False)
+        new_comment.user = request.user
+        new_comment.text = comment_form.cleaned_data['text']
+        new_comment.content_type = ContentType.objects.get(model='product')
+        new_comment.object_id = 1
+        new_comment.parent = None
+        new_comment.is_child = False
+        new_comment.save()
+    return HttpResponseRedirect('')
+
+
+
 
 class CategoryDetail(CategoryDetailMixin, ListView):
     
     template_name = 'category_detail.html'
- 
 
     def get_queryset(self):
         category = Category.objects.get(slug=self.kwargs.get('slug'))
@@ -188,7 +233,7 @@ class Register(View):
             'form': form,
             'category': category,
         }
-        return render(request, 'login.html', context)
+        return render(request, 'register.html', context)
 
     def post(self, request, *args, **kwargs):
         form = RegistrationForm(request.POST or None)
@@ -222,3 +267,30 @@ class Profile(CartMixin, View):
         }
         return render(request, 'profile.html', context=context)
         
+
+
+
+# class GetDispatch(View):
+#     def get(self, request, *args, **kwargs):
+#         form = Dispatch(request.POST or None)
+#         context = {
+#             'form': form
+#         }
+#         return render(request, 'dispatch.html', context)
+def share_prod(request, **kwargs):
+    prod = get_object_or_404(Product, id=kwargs['id'])
+    sent = False
+    if request.method == 'POST':
+        form = DispatchForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            post_url = request.build_absolute_uri(prod.get_absolute_url())
+            subject = '{} recommends you reading {}'.format( cd['email'], prod.name)
+            message = 'Read {} {} comments:{}'.format(prod.name, post_url, cd['comments'])
+            send_mail(subject, message, 'kozhevnikov0001@yandex.ru', [cd['to']])
+            sent = True
+            return HttpResponseRedirect('/home/')
+    else:
+        form = DispatchForm(request.POST) 
+        return render(request, 'dispatch.html', {'form': form})
+ 

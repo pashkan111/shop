@@ -2,7 +2,10 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import fields
 import string
-from .models import Order
+from django.http import request
+
+from django.forms.widgets import Widget
+from .models import Comment, Order, Product
 from mainapp import models
 from django.contrib.auth.models import User
 
@@ -81,6 +84,26 @@ class RegistrationForm(forms.ModelForm):
             raise ValidationError('Пароли не совпадают')
         return self.cleaned_data
 
-
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
 
         
+class DispatchForm(forms.ModelForm):
+    try:
+        email = request.user.email
+    except:
+        email = forms.EmailField()
+    to = forms.EmailField()
+    comments = forms.CharField(widget=forms.Textarea, required=False)
+
+    class Meta:
+        model = Product
+        fields = [
+            'to', 'comments'
+        ]
+
+
+
+
