@@ -1,16 +1,14 @@
 from django.db import models
 
-
 class CategoryFeatures(models.Model):
     category = models.ForeignKey(
         "mainapp.Category", verbose_name='Категория', on_delete=models.CASCADE
         )
     feature_name = models.CharField(max_length=100, verbose_name='Имя характеристики')
-    feature_filter_name = models.CharField(max_length=100, verbose_name='Имя фильтра')
     measure = models.CharField(max_length=20, verbose_name='Единица измерения')
 
     class Meta():
-        unique_together = ('category', 'feature_name', 'feature_filter_name')
+        unique_together = ('category', 'feature_name')
 
     def __str__(self) -> str:
         return f'Для категории: {self.category.name} характеристика: {self.feature_name}'

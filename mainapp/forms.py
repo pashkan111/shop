@@ -85,6 +85,7 @@ class RegistrationForm(forms.ModelForm):
         return self.cleaned_data
 
 class CommentForm(forms.ModelForm):
+
     class Meta:
         model = Comment
         fields = ['text']

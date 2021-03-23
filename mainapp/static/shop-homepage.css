@@ -10,3 +10,26 @@ body {
 .zakaz {
   background-color: blue;
 }
+
+.header {
+  display: inline-block;
+}
+
+.object_in_comment {
+  display: inline-block;
+  margin-right: 30px;
+}
+
+.post_comment {
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.show {
+  display: block;
+}
+.hide {
+  display: none;
+}
+
+

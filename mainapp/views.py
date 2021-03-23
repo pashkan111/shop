@@ -28,7 +28,9 @@ class HomePage(CartMixin, ListView):
         context['count'] = self.get_count()
         return context
 
+
 class CartPage(CartMixin, View):
+    
     def get(self, request, **kwargs):
         category = Category.objects.all()
         save_cart(self.cart)
@@ -133,65 +135,54 @@ class ChangeQUALITY(CartMixin, View):
         return HttpResponseRedirect('/cart/')
 
 
-class ShowDetail(CartMixin, CategoryDetailMixin, DetailView):
+# class ShowDetail(CartMixin, CategoryDetailMixin, DetailView):
     
-    template_name = 'detail.html'
-    context_object_name = 'detail'
-    model = Product
+#     template_name = 'detail.html'
+#     context_object_name = 'detail'
+#     model = Product    
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['count'] = self.get_count()
+#         context['comment_form'] = CommentForm()
+#         product = Product.objects.get(pk=1)
+#         comments = Comment.objects.filter(product=product)
+#         context['comments'] = comments
+#         return context
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['count'] = self.get_count()
-        comment = Product.objects.first().comment.all()
-        result = create_comment(comment)
-        context['comment'] = result
-        context['res'] = result
-        return context
+#     def get(self, request, *args, **kwargs):
+#         form = CommentForm(request.POST or None)
+#         if form.is_valid():
+#             new_comment = form.save(commit=False)
+#             product = Product.objects.get(slug = kwargs['slug'])
+#             new_comment.product = product
+#             new_comment.text = form.cleaned_data['text']
+#             new_comment.name = request.user.username
+#             new_comment.save()
+#             return HttpResponseRedirect('/')
+#         return HttpResponseRedirect('/')
     
-    def post(self, request, *args, **kwargs):
-        comment_form = CommentForm(request.POST or None)
-        if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.user = request.user
-            new_comment.text = comment_form.cleaned_data['text']
-            new_comment.content_type = ContentType.objects.get(model='product')
-            new_comment.object_id = 1
-            new_comment.parent = None
-            new_comment.is_child = False
-            new_comment.save()
-            return HttpResponseRedirect('')
-        return super().dispatch(request, *args, **kwargs)
-    # def get_queryset(self):
-    #     comment = Product.objects.first().comment.all()
-    #     result = create_comment(comment)
-    #     print(result)
+def show_product(request, *args, **kwargs):
+    product = Product.objects.get(pk = kwargs.get('id'))
+    comments = Comment.objects.filter(product=product)
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        new_form = form.save(commit=False)
+        new_form.user = request.user
+        new_form.product = product
+        new_form.save()
+        form = CommentForm()
+    else:
+        new_form = CommentForm()
+    context = {
+        'product': product,
+        'comments': comments,
+        'new_form': new_form,
+        'form': form 
+    }  
+    return render(request, 'detail.html', context)
 
-    # def get(self, request, *args, **kwargs):
-    #     comment_form = CommentForm(request.POST or None)
-    #     context = {
-    #         'comment_form': comment_form
-    #     }
-    #     return render(request, 'detail.html', context=context)
-
-
-def get_comment(request):
-    comment_form = CommentForm(request.POST or None)
-    if comment_form.is_valid():
-        new_comment = comment_form.save(commit=False)
-        new_comment.user = request.user
-        new_comment.text = comment_form.cleaned_data['text']
-        new_comment.content_type = ContentType.objects.get(model='product')
-        new_comment.object_id = 1
-        new_comment.parent = None
-        new_comment.is_child = False
-        new_comment.save()
-    return HttpResponseRedirect('')
-
-
-
-
-class CategoryDetail(CategoryDetailMixin, ListView):
-    
+class CategoryDetail(CategoryDetailMixin, ListView):   
     template_name = 'category_detail.html'
 
     def get_queryset(self):
@@ -203,6 +194,8 @@ class CategoryDetail(CategoryDetailMixin, ListView):
         context = {'prod': self.get_queryset()}
         context['category'] = Category.objects.all()
         return context
+
+
 
 class LoginView(CartMixin, View):
     def get(self, request, *args, **kwargs):
@@ -224,6 +217,7 @@ class LoginView(CartMixin, View):
             login(request, user)
             return HttpResponseRedirect('/home/')
         return self.get()
+
 
 class Register(View):
     def get(self, request, *args, **kwargs):
@@ -255,6 +249,8 @@ class Register(View):
             return HttpResponseRedirect('/home/')
         return self.get(request)
 
+
+
 class Profile(CartMixin, View):
     def get(self, request, *args):
         customer = Customer.objects.get(user = request.user)
@@ -268,15 +264,6 @@ class Profile(CartMixin, View):
         return render(request, 'profile.html', context=context)
         
 
-
-
-# class GetDispatch(View):
-#     def get(self, request, *args, **kwargs):
-#         form = Dispatch(request.POST or None)
-#         context = {
-#             'form': form
-#         }
-#         return render(request, 'dispatch.html', context)
 def share_prod(request, **kwargs):
     prod = get_object_or_404(Product, id=kwargs['id'])
     sent = False

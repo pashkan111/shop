@@ -1,13 +1,14 @@
 
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from .views import ShowDetail, CategoryDetail,  HomePage, CartPage, AddProdToCart, del_from_cart, ChangeQUALITY, Zakaz, GetForm, LoginView, Register, Profile, share_prod
+from .views import  CategoryDetail,  HomePage, CartPage, AddProdToCart, del_from_cart, ChangeQUALITY, Zakaz, GetForm, LoginView, Register, Profile, share_prod, show_product
 
 
 urlpatterns = [
     path('home/', HomePage.as_view(), name = 'home'),
     # path('home/', home, name = 'home'),
-    path('detail/<str:slug>', ShowDetail.as_view(), name = 'detail'),
+    # path('detail/<str:slug>', ShowDetail.as_view(), name = 'detail'),
+    path('detail/<int:id>', show_product, name = 'detail'),
     path('category/<str:slug>/', CategoryDetail.as_view(), name = 'category_detail'),
     path('cart/', CartPage.as_view(), name = 'cart'),
     path('add_prod_to_cart/<str:slug>', AddProdToCart.as_view(), name = 'add_prod_to_cart'),

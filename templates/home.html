@@ -41,15 +41,15 @@
         {% for i in products %}
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
-              <a href="{{i.get_absolute_url}}"><img class="card-img-top" src="{{i.photo.url}}" class="img-fluid"></a>
+              <a href="{% url 'detail' id=i.id %}"><img class="card-img-top" src="{{i.photo.url}}" class="img-fluid"></a>
               <div class="card-body">
                 <h4 class="card-title">
-                  <a href="{% url 'detail' slug=i.slug %}">{{i.name}}</a>
+                  <a href="{% url 'detail' id=i.id %}">{{i.name}}</a>
                 </h4>
                 <h5>{{i.price}}руб</h5>
               </div>
               <div class="card-footer">
-                <small class="text-muted">qqqq</small>
+                <small class="text-muted"></small>
               </div>
             </div>
           </div>

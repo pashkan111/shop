@@ -20,36 +20,31 @@ class Product(models.Model):
     description = models.TextField(verbose_name='описание')
     photo = models.ImageField(upload_to = 'products')
     category = models.ForeignKey('Category', verbose_name='категория', on_delete=models.CASCADE)
-    comment = GenericRelation('comment')
 
     def __str__(self):
         return self.name
          
     def get_absolute_url(self):
-        return reverse('detail', kwargs={'slug': self.slug})
+        return reverse('detail', kwargs={'id': self.id})
 
 class Comment(models.Model):
-    user = models.ForeignKey('Customer', on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.CharField(verbose_name='Пользователь', max_length=50)
     text = models.TextField(verbose_name='Текст')
-    parent = models.ForeignKey(
-        'self',
+    product = models.ForeignKey(
+        Product,
         null=True,
         blank=True, 
-        verbose_name='Родитель',
+        verbose_name='Продукт',
         on_delete=models.CASCADE,
-        related_name='comment_child'
+        related_name='comments'
     )
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey()
-    time_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время добавления')
-    is_child = models.BooleanField(default=False)
 
-    @property
-    def define_parent(self):
-        if not self.parent:
-            return ''
-        return self.parent
+    time_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время добавления')
+    active = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ('-time_date',)
+
 
 class Category(models.Model):
     name = models.CharField(verbose_name='категория', max_length=200)

@@ -14,6 +14,7 @@ class CategoryDetailMixin(SingleObjectMixin):
         return context
 
 
+
 class CartMixin(View):
 
     def dispatch(self, request, *args, **kwargs):
@@ -29,11 +30,9 @@ class CartMixin(View):
             if not cart:
                 cart = Cart.objects.create(for_anon = False)
         self.cart = cart
-      
         return super().dispatch(request, *args, **kwargs)
 
     def get_count(self, *args):
         cartprod_count = Cartproduct.objects.all().count()
         return cartprod_count
-
 
