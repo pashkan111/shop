@@ -5,7 +5,6 @@ from django.db.models.aggregates import Count
 from django.db.transaction import commit
 import datetime
 from django.contrib.contenttypes.fields import GenericForeignKey
-
 from django.contrib.contenttypes.fields import GenericRelation
 
 from django.urls import reverse
@@ -20,6 +19,7 @@ class Product(models.Model):
     description = models.TextField(verbose_name='описание')
     photo = models.ImageField(upload_to = 'products')
     category = models.ForeignKey('Category', verbose_name='категория', on_delete=models.CASCADE)
+    like = models.ManyToManyField(User, related_name='liked_product', blank=True)
 
     def __str__(self):
         return self.name

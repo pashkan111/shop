@@ -1,5 +1,7 @@
 from django.template import Library
 from django.utils.html import mark_safe
+from mainapp.models import Product
+from django.db.models import Count
 register = Library()
 
 @register.filter
@@ -32,3 +34,10 @@ def to_print(comment_list):
             i += to_print(comment['children'])
     
     return mark_safe(res.format(i))
+
+
+
+@register.simple_tag
+def count_product(i):
+    c=Product.objects.filter(category=i).count()
+    return c

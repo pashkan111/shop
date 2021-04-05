@@ -1,7 +1,7 @@
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import ListView
-from .models import Cart, Category, Comment, Customer, Cartproduct
+from .models import Cart, Category, Comment, Customer, Cartproduct, Product
 from django.shortcuts import redirect, render
 from .forms import ZakazForm, LoginForm, RegistrationForm, CommentForm
 

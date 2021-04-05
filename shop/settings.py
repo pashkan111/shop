@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'mainapp',
     'crispy_forms',
     'rest_framework',
-    'spec'
+    'spec',
+    # 'taggit',
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load tags %}
 <div class="col-md-12">
 {% block detail %}
 <div style="display: block; margin-top: 20px; margin-bottom: 30px;">
@@ -9,10 +10,17 @@
         </div> 
 
         <div class="col-md-8">
-            <p class=""><h2>{{product.name}}</h2></p>
+            <div>
+               <div style="display: inline-block; margin-right: 50px;"><h2>{{product.name}}</h2></div>
+               {% with total_likes=product.like.count %}
+                <div id="count_like" style="display: inline-block">
+                    <button style="font-size: 25px" class="btn btn-success">{{ total_likes }} like</button>
+                </div> 
+                {% endwith %}
+            </div>
             <p class="price"><h2>{{product.price}} P</h2></p> 
-            <p class="category">Категория: <a href="{% url 'category_detail' slug=product.category.slug %}" style="text-decoration: none;">{{detail.category}}</a></p> 
-            <p style="display: block;"><a href="{% url 'add_prod_to_cart'  slug=product.slug %}"><button class="btn btn-danger">Добавить в корзину</button></a></p>
+            <p class="category">Категория: <a href="{% url 'category_detail' slug=product.category.slug %}" style="text-decoration: none;">{{product.category}}</a></p> 
+            <p style="display: block;"><a href="{% url 'add_prod_to_cart'  id=product.id %}"><button class="btn btn-danger">Добавить в корзину</button></a></p>
             <p style="display: inline-block"><a href="{% url 'share'  id=product.id %}"><button class="btn btn-primary">Поделиться</button></a></p>
         </div>
     <div>

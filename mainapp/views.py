@@ -1,20 +1,25 @@
-from django import forms
+from django import forms, views
+from django.core.checks.messages import Error
+from django.core.exceptions import ValidationError
 from django.db.models import base
 from django.db.models.aggregates import Count
 from django.db.models.query import QuerySet
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth import authenticate, login
 from django.views.generic.base import View
 from .models import *
 from .mixins import *
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from .forms import ZakazForm, LoginForm, RegistrationForm, CommentForm, DispatchForm
+from .forms import ZakazForm, LoginForm, RegistrationForm, CommentForm, DispatchForm, NewAdvForm, SearchForm
 from .utils import *
 from django.core.mail import send_mail 
-
+from django.urls import reverse_lazy
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 class HomePage(CartMixin, ListView):
     model = Product
@@ -280,4 +285,48 @@ def share_prod(request, **kwargs):
     else:
         form = DispatchForm(request.POST) 
         return render(request, 'dispatch.html', {'form': form})
- 
+
+class NewAdv(CreateView):
+    model = Product
+    template_name = 'new_adv.html'
+    success_url = reverse_lazy('home')
+    form_class = NewAdvForm
+
+
+# class NewAdv(View):
+#     def get(self, request, *args, **kwargs):
+#         form = NewAdvForm(request.POST or None)
+#         return render(request, 'new_adv.html', {'form': form})
+
+#     def post(self, request, *args, **kwargs):
+#         form = NewAdvForm(request.POST or None, request.FILES)
+#         if form.is_valid():
+#             new_adv = form.save()
+#             new_adv.save()
+#         else:
+#             form = NewAdvForm(request.POST or None)
+#         return HttpResponseRedirect('/home/')
+
+class Search(View):  
+    def post(self, request, *args, **kwargs):
+        product_name = request.POST.get('name')
+        product = Product.objects.filter(name = product_name)
+        return render(request, 'search.html', {'product': product})
+
+@login_required
+@require_POST
+def like_product(request):
+    product_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if product_id and action:
+        try:
+            product = Product.objects.get(pk = product_id)
+            if action == 'like':
+                product.liked_product.add(request.user)
+            else:
+                product.liked_product.remove(request.user)
+                return JsonResponse({'status':'ok'})
+        except:
+            pass
+    return JsonResponse({'status':'ok'})
+

@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db.models.base import Model
 from django.forms import fields
 import string
 from django.http import request
@@ -12,7 +13,7 @@ from django.contrib.auth.models import User
 class ZakazForm(forms.ModelForm):
     # created = forms.DateField(widget=forms.TextInput(attrs={'type':'date'}))
     # def __init__(self, *args, **kwargs):
-    #     super().__init__( *args, **kwargs)
+    #     super().__init__()
     #     self.fields['created'].label = 'Дата доставки'
     
     class Meta:
@@ -106,5 +107,11 @@ class DispatchForm(forms.ModelForm):
         ]
 
 
+class NewAdvForm(forms.ModelForm):
+    photo = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    class Meta:
+        model = Product
+        fields = ['name', 'category', 'price', 'description', 'photo']
 
-
+class SearchForm(forms.Form):
+    search = forms.CharField(required=False)

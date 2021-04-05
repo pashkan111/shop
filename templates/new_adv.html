@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<form method="POST" action="" enctype="multipart/form-data">
+    <h3>Создать новое объявление</h3>
+    {% csrf_token %}
+    {{ form| crispy }}
+    <input type="submit" value="Опубликовать" class="btn btn-success" >
+</form>
+{% endblock %}

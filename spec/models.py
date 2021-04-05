@@ -33,9 +33,3 @@ class ProductFeatures(models.Model):
 
     def __str__(self) -> str:
         return f'Продукт: {self.product.name} характеристика: {self.feature} значение: {self.value}'
-
-
-
-
-
-

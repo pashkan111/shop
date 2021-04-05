@@ -23,7 +23,7 @@
                 <td class="w-25" ><img class="card-img-top" src="{{i.product.photo.url}}" class="img-fluid"></td>
                 <td>{{i.product.price}}</td>
                 <td>
-                    <form action="{% url 'change_quality' slug=i.product.slug %}" method="POST">
+                    <form action="{% url 'change_quality' id=i.product.id %}" method="POST">
                         {% csrf_token %}
                         <input type="number" class="form-control" name="quality" style="width: 100px;" min="1" value="{{i.quality}}">
                         <br>
@@ -32,7 +32,7 @@
                 </td>
               
                 <td>{{i.finalprice}}</td>
-                <td><a href="{% url 'del_product_from_cart'  slug=i.product.slug %}"><button class="btn btn-danger">Убрать из корзины</button></a></td>
+                <td><a href="{% url 'del_product_from_cart'  id=i.product.id %}"><button class="btn btn-danger">Убрать из корзины</button></a></td>
             </tr>
 
              {% endfor %}
@@ -50,7 +50,5 @@
 
             </tbody>
         </table>
-
-       
 
 {% endblock %}
