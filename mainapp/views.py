@@ -84,8 +84,8 @@ class GetForm(CartMixin, View):
 class AddProdToCart(CartMixin, View):
 
     def get(self, request, *args, **kwargs):
-        prod_slug = kwargs.get('slug')
-        product = Product.objects.get(slug = prod_slug)
+        prod_id = kwargs.get('id')
+        product = Product.objects.get(id = prod_id)
         cartprod, created = Cartproduct.objects.get_or_create(
             user = self.cart.owner, cart = self.cart, product = product
         )       
@@ -114,8 +114,8 @@ def del_from_cart(request, *args, **kwargs):
             
     customer, created_customer = Customer.objects.get_or_create(user = request.user)
     cart, created_cart = Cart.objects.get_or_create(owner = customer)
-    prod_slug = kwargs.get('slug')
-    product = Product.objects.get(slug = prod_slug)
+    prod_id = kwargs.get('id')
+    product = Product.objects.get(id = prod_id)
     cartprod = Cartproduct.objects.get(
         user = cart.owner, cart = cart, product = product
     )  
@@ -127,9 +127,9 @@ def del_from_cart(request, *args, **kwargs):
 
 class ChangeQUALITY(CartMixin, View):
     def post(self, request, *args, **kwargs):
-        prod_slug = kwargs.get('slug')
+        prod_id = kwargs.get('id')
         
-        product = Product.objects.get(slug = prod_slug)
+        product = Product.objects.get(id = prod_id)
         cartprod = Cartproduct.objects.get(
             user = self.cart.owner, cart = self.cart, product=product
         )       
@@ -313,20 +313,28 @@ class Search(View):
         product = Product.objects.filter(name = product_name)
         return render(request, 'search.html', {'product': product})
 
-@login_required
-@require_POST
-def like_product(request):
-    product_id = request.POST.get('id')
-    action = request.POST.get('action')
-    if product_id and action:
-        try:
-            product = Product.objects.get(pk = product_id)
-            if action == 'like':
-                product.liked_product.add(request.user)
-            else:
-                product.liked_product.remove(request.user)
-                return JsonResponse({'status':'ok'})
-        except:
-            pass
-    return JsonResponse({'status':'ok'})
+# @login_required
+# @require_POST
+# def like_product(request):
+#     product_id = request.POST.get('id')
+#     action = request.POST.get('action')
+#     if product_id and action:
+#         try:
+#             product = Product.objects.get(pk = product_id)
+#             if action == 'like':
+#                 product.liked_product.add(request.user)
+#             else:
+#                 product.liked_product.remove(request.user)
+#                 return JsonResponse({'status':'ok'})
+#         except:
+#             pass
+#     return JsonResponse({'status':'ok'})
 
+class Like(View):
+    def post(self, request, **kwargs):
+        product_id = kwargs.get('id')
+        product = Product.objects.get(id=product_id)
+        user = request.user
+        product.like.add(user)
+        product.save()
+        return HttpResponseRedirect(product.get_absolute_url())

@@ -14,9 +14,14 @@
                <div style="display: inline-block; margin-right: 50px;"><h2>{{product.name}}</h2></div>
                {% with total_likes=product.like.count %}
                 <div id="count_like" style="display: inline-block">
-                    <button style="font-size: 25px" class="btn btn-success">{{ total_likes }} like</button>
+                    <!-- <form method="POST" action="{{product.get_absolute_url}}"> -->
+                    <form method="POST" action="{% url 'like' id=product.id %}">
+                        {% csrf_token %}
+                        <button name="like" style="font-size: 25px" class="btn btn-success">{{ total_likes }} like</button>
+                    </form>
+                  {% endwith %}  
                 </div> 
-                {% endwith %}
+                
             </div>
             <p class="price"><h2>{{product.price}} P</h2></p> 
             <p class="category">Категория: <a href="{% url 'category_detail' slug=product.category.slug %}" style="text-decoration: none;">{{product.category}}</a></p> 
@@ -35,7 +40,7 @@
     <form action="" method="POST">
         {% csrf_token %}
         {{form|crispy}}
-    <input type="submit" class="btn btn-primary" value="Отправить">
+    <input id="comment" type="submit" class="btn btn-primary" value="Отправить">
     </form>
 </div>
 

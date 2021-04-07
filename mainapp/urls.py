@@ -1,7 +1,7 @@
 
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from .views import  (CategoryDetail,  HomePage, CartPage, AddProdToCart, del_from_cart, ChangeQUALITY, Zakaz, GetForm, LoginView, Register, Profile, share_prod, show_product, NewAdv, Search, like_product
+from .views import  (CategoryDetail,  HomePage, CartPage, AddProdToCart, del_from_cart, ChangeQUALITY, Zakaz, GetForm, LoginView, Register, Profile, share_prod, show_product, NewAdv, Search, Like
 )
 
 
@@ -25,5 +25,5 @@ urlpatterns = [
     path('share/<int:id>', share_prod, name = 'share'),
     path('new_adv/', NewAdv.as_view(), name = 'new_adv'),
     path('results/', Search.as_view(), name = 'results'),
-    path('like/', like_product, name = 'like'),
+    path('like/<int:id>', Like.as_view(), name = 'like'),
 ]
