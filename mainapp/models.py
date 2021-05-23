@@ -132,7 +132,6 @@ class Order(models.Model):
 
     )
     comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
-
     delivery = models.CharField(
         max_length=100,
         verbose_name='',

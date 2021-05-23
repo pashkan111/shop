@@ -1,21 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models.base import Model
-from django.forms import fields
-import string
 from django.http import request
-
-from django.forms.widgets import Widget
-from .models import Comment, Order, Product
-from mainapp import models
+from .models import Order, Product, Comment
 from django.contrib.auth.models import User
 
-class ZakazForm(forms.ModelForm):
-    # created = forms.DateField(widget=forms.TextInput(attrs={'type':'date'}))
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__()
-    #     self.fields['created'].label = 'Дата доставки'
-    
+class ZakazForm(forms.ModelForm):    
     class Meta:
         model = Order
         fields = ('name', 'surname', 'adress', 'phone', 'delivery', 'comment')

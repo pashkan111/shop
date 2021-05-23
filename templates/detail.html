@@ -14,7 +14,6 @@
                <div style="display: inline-block; margin-right: 50px;"><h2>{{product.name}}</h2></div>
                {% with total_likes=product.like.count %}
                 <div id="count_like" style="display: inline-block">
-                    <!-- <form method="POST" action="{{product.get_absolute_url}}"> -->
                     <form method="POST" action="{% url 'like' id=product.id %}">
                         {% csrf_token %}
                         <button name="like" style="font-size: 25px" class="btn btn-success">{{ total_likes }} like</button>
@@ -44,11 +43,9 @@
     </form>
 </div>
 
-
 <div class="comment">
     <div>
         <h4 style="margin-bottom: 25px; display: inline-block;">Отзывы: {{comments.count}}</h4>
-        <div style="display: inline-block; margin-left: 30px;"><button data-button class="btn btn-primary">Оставить отзыв</button></div>
     </div>
 {% for comment in comments %}
     <div class="header">
@@ -62,8 +59,6 @@
      {% endfor %} 
 </div>
 </div>
-
-
 
 {% endblock %}
 

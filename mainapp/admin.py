@@ -1,39 +1,11 @@
 from django.contrib import admin
-
 from .models import*
-from django.forms import ModelForm, ValidationError
-from PIL import Image
-
-# class NotebookForm(ModelForm):
-
-#     MIN_IMAGE = (400, 400)
-#     MAX_IMAGE = (1000, 1000)
-
-#     def __init__(self, *args, **kwargs) -> None:
-#         super().__init__(*args, **kwargs)
-#         self.fields['photo'].help_text = 'Изображение должно быть минимум {}x{}'.format(*self.MIN_IMAGE)
-    
-#     def clean_photo(self):
-#         photo = self.cleaned_data['photo']
-#         photo = Image.open(photo)
-       
-#         min_height, min_width = self.MIN_IMAGE
-#         max_height, max_width = self.MAX_IMAGE
-#         if photo.height<min_height or photo.width<min_width:
-#             raise ValidationError('Фотка не соответствует параметрам')
-#         if photo.height>max_height or photo.width>max_width:
-#             raise ValidationError('Фотка не соответствует параметрам')
-        
-
-
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name', )}
 
 class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name', )}
-
-
 
 admin.site.register(Cartproduct)
 admin.site.register(Category, CategoryAdmin)

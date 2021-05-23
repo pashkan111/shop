@@ -1,27 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block carusel %}
-
-<div class="sim-slider">
-  <ul class="sim-slider-list">
-    <li><img src="http://pvbk.spb.ru/inc/slider/imgs/no-image.gif" alt="screen"></li> <!-- это экран -->
-    <li class="sim-slider-element"><img src="http://pvbk.spb.ru/inc/slider/imgs/planet0.jpg" alt="0"></li>
-    <li class="sim-slider-element"><img src="http://pvbk.spb.ru/inc/slider/imgs/planet1.jpg" alt="1"></li>
-    <li class="sim-slider-element"><img src="http://pvbk.spb.ru/inc/slider/imgs/planet2.jpg" alt="2"></li>
-    <li class="sim-slider-element"><img src="http://pvbk.spb.ru/inc/slider/imgs/planet3.jpg" alt="3"></li>
-    <li class="sim-slider-element"><img src="http://pvbk.spb.ru/inc/slider/imgs/planet4.jpg" alt="4"></li>
-    <li class="sim-slider-element"><img src="http://pvbk.spb.ru/inc/slider/imgs/planet5.jpg" alt="5"></li>
-  </ul>
-  <div class="sim-slider-arrow-left"></div>
-  <div class="sim-slider-arrow-right"></div>
-  <div class="sim-slider-dots"></div>
-</div>
-
-{% endblock %}
-
-
-
 {% block search %}
 
 <div class="col-lg-3" style="margin-top: 50px;">
@@ -29,8 +8,8 @@
   <form action="{% url 'results' %}" method="POST">
     
     {% csrf_token %}
-    <p style="display: inline-block; position: absolute;"><input type="text" class="form-control" name="name" style="width: 220px;" min="1" value=""></p>
-    <!-- <br> -->
+    <p style="display: inline-block; position: absolute;"><input type="text" class="form-control" name="name" style="width: 220px;" placeholder="Поиск"></p>
+
     <p style="display: inline-block; position: relative; left: 230px;"><input type="submit" class="btn btn-primary" value="Найти"></p>
 </form>
 </div>
@@ -41,11 +20,11 @@
 {% block content %}
 
     {% for i in products %}
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card h-100">
+      <div class="col-lg-4 col-md-6 mb-4 mt-4">
+        <div class="card" style="height: 420px;">
           <a href="{% url 'detail' id=i.id %}"><img class="card-img-top" src="{{i.photo.url}}" class="img-fluid"></a>
           <div class="card-body">
-            <h4 class="card-title">
+            <h4 class="card-title" >
               <a href="{% url 'detail' id=i.id %}">{{i.name}}</a>
             </h4>
             <h5>{{i.price}}руб</h5>

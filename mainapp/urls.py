@@ -7,13 +7,10 @@ from .views import  (CategoryDetail,  HomePage, CartPage, AddProdToCart, del_fro
 
 urlpatterns = [
     path('home/', HomePage.as_view(), name = 'home'),
-    # path('home/', home, name = 'home'),
-    # path('detail/<str:slug>', ShowDetail.as_view(), name = 'detail'),
     path('detail/<int:id>', show_product, name = 'detail'),
     path('category/<str:slug>/', CategoryDetail.as_view(), name = 'category_detail'),
     path('cart/', CartPage.as_view(), name = 'cart'),
     path('add_prod_to_cart/<int:id>', AddProdToCart.as_view(), name = 'add_prod_to_cart'),
-    # path('del_product_from_cart/<str:ct_model>/<str:slug>', DeleteFromCart.as_view(), name = 'del_product_from_cart'),
     path('del_product_from_cart/<int:id>', del_from_cart, name = 'del_product_from_cart'),
     path('change_quality/<int:id>', ChangeQUALITY.as_view(), name = 'change_quality'),
     path('zakaz/', Zakaz.as_view(), name = 'zakaz'),

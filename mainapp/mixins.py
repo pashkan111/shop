@@ -5,14 +5,12 @@ from .models import Cart, Category, Comment, Customer, Cartproduct, Product
 from django.shortcuts import redirect, render
 from .forms import ZakazForm, LoginForm, RegistrationForm, CommentForm
 
-
 class CategoryDetailMixin(SingleObjectMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = Category.objects.all()
         return context
-
 
 
 class CartMixin(View):

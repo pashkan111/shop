@@ -1,10 +1,3 @@
-from django import forms, views
-from django.core.checks.messages import Error
-from django.core.exceptions import ValidationError
-from django.db.models import base
-from django.db.models.aggregates import Count
-from django.db.models.query import QuerySet
-from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth import authenticate, login
@@ -17,9 +10,7 @@ from .forms import ZakazForm, LoginForm, RegistrationForm, CommentForm, Dispatch
 from .utils import *
 from django.core.mail import send_mail 
 from django.urls import reverse_lazy
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+
 
 class HomePage(CartMixin, ListView):
     model = Product
@@ -94,23 +85,7 @@ class AddProdToCart(CartMixin, View):
         return HttpResponseRedirect('/cart/')
 
 
-# class DeleteFromCart(CartMixin,View):
-
-#     def del_prod(self, **kwargs):
-#         ct_model, prod_slug = kwargs.get('ct_model'), kwargs.get('slug')
-#         content_type = ContentType.objects.get(model = ct_model)
-#         product = content_type.model_class().objects.get(slug = prod_slug)
-#         cartprod = Cartproduct.objects.get(
-#             user = self.cart.owner, cart = self.cart, content_type=content_type, object_id = product.id
-#         )  
-#         self.cart.cartprod.remove(cartprod)
-#         cartprod.delete()
-#         self.cart.save() 
-        
-#         return HttpResponseRedirect('/cart/')
-
-
-def del_from_cart(request, *args, **kwargs):          
+def del_from_cart(request, **kwargs):          
             
     customer, created_customer = Customer.objects.get_or_create(user = request.user)
     cart, created_cart = Cart.objects.get_or_create(owner = customer)
@@ -139,33 +114,6 @@ class ChangeQUALITY(CartMixin, View):
         save_cart(self.cart)
         return HttpResponseRedirect('/cart/')
 
-
-# class ShowDetail(CartMixin, CategoryDetailMixin, DetailView):
-    
-#     template_name = 'detail.html'
-#     context_object_name = 'detail'
-#     model = Product    
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['count'] = self.get_count()
-#         context['comment_form'] = CommentForm()
-#         product = Product.objects.get(pk=1)
-#         comments = Comment.objects.filter(product=product)
-#         context['comments'] = comments
-#         return context
-    
-#     def get(self, request, *args, **kwargs):
-#         form = CommentForm(request.POST or None)
-#         if form.is_valid():
-#             new_comment = form.save(commit=False)
-#             product = Product.objects.get(slug = kwargs['slug'])
-#             new_comment.product = product
-#             new_comment.text = form.cleaned_data['text']
-#             new_comment.name = request.user.username
-#             new_comment.save()
-#             return HttpResponseRedirect('/')
-#         return HttpResponseRedirect('/')
     
 def show_product(request, *args, **kwargs):
     product = Product.objects.get(pk = kwargs.get('id'))
@@ -293,42 +241,11 @@ class NewAdv(CreateView):
     form_class = NewAdvForm
 
 
-# class NewAdv(View):
-#     def get(self, request, *args, **kwargs):
-#         form = NewAdvForm(request.POST or None)
-#         return render(request, 'new_adv.html', {'form': form})
-
-#     def post(self, request, *args, **kwargs):
-#         form = NewAdvForm(request.POST or None, request.FILES)
-#         if form.is_valid():
-#             new_adv = form.save()
-#             new_adv.save()
-#         else:
-#             form = NewAdvForm(request.POST or None)
-#         return HttpResponseRedirect('/home/')
-
 class Search(View):  
     def post(self, request, *args, **kwargs):
         product_name = request.POST.get('name')
-        product = Product.objects.filter(name = product_name)
+        product = Product.objects.filter(name__icontains = product_name)
         return render(request, 'search.html', {'product': product})
-
-# @login_required
-# @require_POST
-# def like_product(request):
-#     product_id = request.POST.get('id')
-#     action = request.POST.get('action')
-#     if product_id and action:
-#         try:
-#             product = Product.objects.get(pk = product_id)
-#             if action == 'like':
-#                 product.liked_product.add(request.user)
-#             else:
-#                 product.liked_product.remove(request.user)
-#                 return JsonResponse({'status':'ok'})
-#         except:
-#             pass
-#     return JsonResponse({'status':'ok'})
 
 class Like(View):
     def post(self, request, **kwargs):
